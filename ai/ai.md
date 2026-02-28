@@ -1,9 +1,17 @@
 # ai awesome repo
 
 [GitHub trending repositories](https://trendshift.io/github-trending-repositories)
+[build-your-own-x](https://github.com/codecrafters-io/build-your-own-x)
+[Project Based Learning](https://github.com/practical-tutorials/project-based-learning?tab=readme-ov-file#project-based-learning)
+[Coding Interview University](https://github.com/jwasham/coding-interview-university?tab=readme-ov-file#coding-interview-university)
+[The Algorithms - Python](https://github.com/TheAlgorithms/Python?tab=readme-ov-file#the-algorithms---python)
+[Stirling PDF - The Open-Source PDF Platform](https://github.com/Stirling-Tools/Stirling-PDF?tab=readme-ov-file#stirling-pdf---the-open-source-pdf-platform)
+[AI Hedge Fund](https://github.com/virattt/ai-hedge-fund?tab=readme-ov-file#ai-hedge-fund)
+[]()
 
 ## primary
 
+[Generative AI for Beginners (Version 3) - A Course](https://github.com/microsoft/generative-ai-for-beginners?tab=readme-ov-file#generative-ai-for-beginners-version-3---a-course)
 [Awesome LLM Appsa](https://github.com/Shubhamsaboo/awesome-llm-apps)
 [Awesome MCP Servers](https://github.com/punkpeye/awesome-mcp-servers)
 [Awesome MCP Servers2](https://github.com/appcypher/awesome-mcp-servers)
@@ -24,5 +32,4 @@
 
 ## thirtary
 
-[aaa](aaa)
 [aaa](aaa)
