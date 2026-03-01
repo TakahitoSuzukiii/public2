@@ -7,7 +7,6 @@
 [The Algorithms - Python](https://github.com/TheAlgorithms/Python?tab=readme-ov-file#the-algorithms---python)
 [Stirling PDF - The Open-Source PDF Platform](https://github.com/Stirling-Tools/Stirling-PDF?tab=readme-ov-file#stirling-pdf---the-open-source-pdf-platform)
 [AI Hedge Fund](https://github.com/virattt/ai-hedge-fund?tab=readme-ov-file#ai-hedge-fund)
-[]()
 
 ## primary
 
