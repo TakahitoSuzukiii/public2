@@ -21,10 +21,6 @@
 [Awesome MLOps](https://github.com/visenger/awesome-mlops)
 [Awesome Artificial Intelligence](https://github.com/owainlewis/awesome-artificial-intelligence)
 
-## thirtary
-
-[aaa](aaa)
-
 ## Generative AI
 
 [awesome-generative-ai-guide](https://github.com/aishwaryanr/awesome-generative-ai-guide?tab=readme-ov-file#star-bookmark-awesome-generative-ai-guide)
@@ -103,15 +99,41 @@
 
 [Awesome AI Agents](https://github.com/e2b-dev/awesome-ai-agents?tab=readme-ov-file#-awesome-ai-agents)
 [Awesome AI Apps](https://github.com/Arindam200/awesome-ai-apps?tab=readme-ov-file#awesome-ai-apps-)
-[]()
-[]()
+
+### 🔍 3. 2つの違い（初心者向けに超わかりやすく）
+
+| 観点           | Awesome AI Agents            | Awesome AI Apps                           |
+| -------------- | ---------------------------- | ----------------------------------------- |
+| **主なテーマ** | AIエージェント技術           | AIアプリ全般                              |
+| **内容の種類** | フレームワーク・ツールの紹介 | 実際のアプリのサンプル                    |
+| **対象者**     | エージェントを作りたい開発者 | AIアプリを作りたい人全般                  |
+| **学びやすさ** | 技術寄り（中級者向け）       | 実例が多く初心者向け                      |
+| **範囲**       | エージェントに特化           | RAG・エージェント・ワークフローなど幅広い |
+
+## 🎯 4. どっちを見ればいい？（初心者向けガイド）
+
+### まずAIアプリを作ってみたい  
+→ **Awesome AI Apps**  
+理由：動くサンプルが多く、理解しやすい。
+
+### AIエージェントの仕組みを深く知りたい  
+→ **Awesome AI Agents**  
+理由：フレームワークや技術の比較がしやすい。
+
+### RAG・エージェント・ワークフロー全部触りたい  
+→ **Awesome AI Apps**  
+理由：幅広く実例が揃っている。
+
+## aws
+
+[Amazon Bedrock Workshop](https://catalog.us-east-1.prod.workshops.aws/amazon-bedrock/en-US)
+[Strands Agents](https://strandsagents.com/latest/)
+[Strands Agents Workshop](https://github.com/LondheShubham153/strands-agents-workshop?tab=readme-ov-file#strands-agents-workshop)
+[初心者向けAWS Strandsコース](https://github.com/Arindam200/awesome-ai-apps/tree/main/course/aws_strands)
 
 ## LangChain
 
 [Awesome LangChain](https://github.com/kyrolabs/awesome-langchain?tab=readme-ov-file#-awesome-langchain--)
-[]()
-[]()
-[]()
 
 ## mcp
 
@@ -122,13 +144,11 @@
 ## cursor
 
 [Awesome Cursor Rules](https://github.com/PatrickJS/awesome-cursorrules?tab=readme-ov-file#awesome-cursor-rules-)
-[]()
-[]()
-[]()
 
 ## claude
 
 [Awesome Claude Skills](https://github.com/ComposioHQ/awesome-claude-skills?tab=readme-ov-file#awesome-claude-skills)
+
 []()
 []()
 []()
