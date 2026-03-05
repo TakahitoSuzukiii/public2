@@ -2,6 +2,7 @@
 
 ## primary
 
+[Claude Code](https://github.com/anthropics/claude-code?tab=readme-ov-file#claude-code)
 [Generative AI for Beginners (Version 3) - A Course](https://github.com/microsoft/generative-ai-for-beginners?tab=readme-ov-file#generative-ai-for-beginners-version-3---a-course)
 [Awesome LLM Appsa](https://github.com/Shubhamsaboo/awesome-llm-apps)
 [Awesome MCP Servers](https://github.com/punkpeye/awesome-mcp-servers)
