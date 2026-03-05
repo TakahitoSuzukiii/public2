@@ -3,6 +3,7 @@
 ## primary
 
 [Claude Code](https://github.com/anthropics/claude-code?tab=readme-ov-file#claude-code)
+[Awesome Agent Skills](https://github.com/skillmatic-ai/awesome-agent-skills?tab=readme-ov-file#awesome-agent-skills-)
 [Generative AI for Beginners (Version 3) - A Course](https://github.com/microsoft/generative-ai-for-beginners?tab=readme-ov-file#generative-ai-for-beginners-version-3---a-course)
 [Awesome LLM Appsa](https://github.com/Shubhamsaboo/awesome-llm-apps)
 [Awesome MCP Servers](https://github.com/punkpeye/awesome-mcp-servers)
@@ -14,6 +15,10 @@
 [Awesome Generative AI](https://github.com/steven2358/awesome-generative-ai)
 [Awesome Generative AI2](https://github.com/filipecalegario/awesome-generative-ai)
 [Awesome LangChain](https://github.com/kyrolabs/awesome-langchain)
+[LangChain](https://docs.langchain.com/oss/python/langchain/overview)
+[langgraph](https://github.com/langchain-ai/langgraph)
+[LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)
+[haystack](https://github.com/deepset-ai/haystack)
 [Awesome AI Apps](https://github.com/Arindam200/awesome-ai-apps)
 
 ## secondary
