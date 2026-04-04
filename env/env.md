@@ -1,338 +1,305 @@
-# **クラウド開発環境ガイド：Cloud9 vs WorkSpaces（ローカル制約あり版）**
+# .env の前提ルール（共通）
 
-AWS上で開発環境を持つ方法はいくつかあるが、  
-**ローカルPCにVSCodeを入れられない／SSHも使えない**という制約がある場合、  
-実質的に選択肢は次の2つに絞られる。
-
-- **Cloud9（ブラウザIDE）で完結させる**
-- **WorkSpaces（クラウドPC）にVSCode/Cursorを入れて使う**
-
-どちらも「ローカルに何もインストールできない」状況をクリアできる。  
-ただし、性質が大きく異なるため、用途に応じて選ぶ必要がある。
+- **コードに秘密情報を書かない**
+- **.env は Git 管理しない（`.gitignore` に入れる）**
+- **本番のシークレットはクラウド側（Secrets / Parameter Store 等）に寄せる**
+- **コンテナイメージに秘密情報を焼き込まない**
 
 ---
 
-## **1. Cloud9：AWSネイティブのブラウザIDE**
+# TypeScript プロジェクト向け .env 設計テンプレ
 
-### 🌐 **特徴**
-- ブラウザだけで開発できる。ローカルに何もインストール不要。
-- 裏側はEC2なので、Node/Python/LLMライブラリなど自由に入れられる。
-- AWSサービスとの統合が強く、LambdaやAPI Gatewayの開発がしやすい。
-- VSCodeは使えない（ローカルに入れられないため）。  
-  → Cloud9のエディタで完結する運用になる。
+## 想定構成
 
-### 👍 **メリット**
-- ローカル制約が強い環境でも問題なく使える。
-- ブラウザさえあればどこでも同じ環境にアクセス可能。
-- EC2の自動休止を使えばコストを抑えられる。
-- AWS公式のため、権限設定やIAMロールがスムーズ。
+- ランタイム: Node.js（TypeScript ビルド済み）
+- 利用ライブラリ例: `dotenv`, `zod`
+- 実行環境: Docker / Docker Compose / クラウド
 
-### 👎 **デメリット**
-- エディタとしてはVSCodeに劣る（拡張性・操作性）。
-- AIコーディング（Cursorなど）は使えない。
-- ブラウザIDEなので、重い処理はややストレス。
+### ディレクトリ構成例
 
-### 🛠 **構築手順（Cloud9）**
-1. **AWSコンソール → Cloud9 → Create environment**
-2. 名前をつける（例：`dev-env-cloud9`）
-3. **Environment type：EC2**
-4. **Instance type：t3.small**
-5. **Platform：Amazon Linux 2 or Ubuntu**
-6. **Cost-saving setting：30分で自動休止**（必須）
-7. 作成完了後、ブラウザでIDEにアクセスして開発開始
-
-### 💰 **コスト（t3.smallを1か月使った場合）**
-- **EC2（t3.small）**：約 0.026 USD/h  
-  → 720h（1か月）で **約 18.7 USD（約 2,800円）**
-- **EBS 50GB**：約 4 USD（約 600円）
-- **合計：約 3,400円/月**
-
-※自動休止を使えば、実際はもっと安くなる。
-
----
-
-## **2. WorkSpaces：クラウド上の自分専用PC**
-
-### 🖥 **特徴**
-- AWS上に「クラウドPC（Windows/Linux）」を持つサービス。
-- その中に **VSCode / Cursor / Git / Node / Python** など自由にインストール可能。
-- ローカルPCはただの端末として使うだけでOK。
-
-### 👍 **メリット**
-- ほぼ「クラウドに置いた自分のPC」。  
-  → VSCodeもCursorも普通に使える。
-- ローカルPCの制約を完全に回避できる。
-- 開発体験は最も自然で快適。
-
-### 👎 **デメリット**
-- 月額固定で、EC2より高くつきやすい。
-- ネットワーク品質に依存（遅いと操作がもっさり）。
-- GPUを使うAI開発には向かない（高額になる）。
-
-### 🛠 **構築手順（WorkSpaces）**
-1. **AWSコンソール → WorkSpaces → Launch WorkSpaces**
-2. **Directory（Simple AD）を作成**
-3. **ユーザーを作成し、WorkSpaceを割り当て**
-4. **Bundle（スペック）選択**
-   - Standard（2vCPU / 4GB / 50GB）以上を推奨
-5. 数十分待つと、登録メールが届く
-6. ローカルPCに **WorkSpaces Client** をインストール
-7. クラウドPCにログインし、VSCode/Cursorをインストールして利用開始
-
-### 💰 **コスト（Standardバンドルの例）**
-- Tokyoリージョンで **約 35 USD/月（約 5,000円）** 程度  
-  ※月額固定。使わなくてもほぼ同額。
-
----
-
-# **Cloud9 vs WorkSpaces：ローカル制約が強い場合の最終比較**
-
-| 項目                 | Cloud9                    | WorkSpaces                          |
-| -------------------- | ------------------------- | ----------------------------------- |
-| ローカル制約への強さ | ◎（ブラウザのみ）         | ◎（クライアントのみ）               |
-| VSCode/Cursor        | ✕（使えない）             | ◎（普通に使える）                   |
-| 開発体験             | △（ブラウザIDE）          | ◎（クラウドPC）                     |
-| AIコーディング       | △（ブラウザIDEの限界）    | ◎（Cursor利用可）                   |
-| コスト               | 安い（3,000円台〜）       | やや高い（5,000円〜）               |
-| 運用の楽さ           | ○                         | ◎                                   |
-| 向いている人         | AWS中心の開発、コスト重視 | VSCode/Cursorを使いたい、快適さ重視 |
-
----
-
-# **結論（崇史さん向け）**
-
-ローカルPCにVSCodeを入れられず、SSHも使えないという制約を考えると、  
-**開発体験を重視するなら WorkSpaces が最適**。
-
-- VSCode/Cursorをそのまま使える  
-- ローカル制約を完全に回避  
-- 開発体験が最も自然でストレスが少ない
-
-コストを抑えたい場合は Cloud9 も選択肢だが、  
-**Cursorを使ったAIコーディングはできない**ため、  
-崇史さんの目的（Web開発＋AIコーディング）には WorkSpaces がより合う。
-
-=========================
-
-# **クラウド開発環境ガイド：Cloud9 / WorkSpaces × CodeCommit（ローカル制約あり版）**
-
-AWS 上で開発環境を構築し、GitHub のようなソース管理を行いたい場合、  
-ローカルPCに VSCode や SSH が使えない環境では、次の 2 つが現実的な選択肢になる。
-
-- **Cloud9（ブラウザIDE）＋ CodeCommit**
-- **WorkSpaces（クラウドPC）＋ VSCode/Cursor ＋ CodeCommit**
-
-どちらも「ローカルに何もインストールできない」制約をクリアしつつ、  
-AWS 内で完結した Git 運用が可能。
-
----
-
-# **1. CodeCommit：AWS ネイティブの Git リポジトリ**
-
-CodeCommit は AWS が提供する **フルマネージド Git リポジトリ**で、  
-Cloud9 や WorkSpaces と組み合わせると、GitHub とほぼ同じ運用ができる。
-
-### 特徴
-- 完全プライベート Git リポジトリ
-- IAM による強力なアクセス管理
-- VPC 内で閉じた運用も可能
-- GitHub と同じ Git コマンドで操作できる
-- Cloud9 とは公式に統合されている（AWS公式ドキュメントより）  
-    [AWS Documentation](https://docs.aws.amazon.com/ja_jp/codecommit/latest/userguide/setting-up-ide-c9.html)
-
----
-
-# **2. CodeCommit の最小 Git 運用フロー（AWS 内だけで完結）**
-
-AWS 上で Git を使う最小構成は次の 5 ステップ。
-
-## **① CodeCommit リポジトリを作成**
-AWS コンソール → CodeCommit → Create repository  
-名前を入力して作成するだけ。
-
-（Cloud9 から直接作成することも可能）
-
----
-
-## **② Git 認証情報を作成（HTTPS）**
-SSH が使えないため、**HTTPS Git 認証情報**を利用する。
-
-IAM → 対象ユーザー → 認証情報タブ →  
-「**AWS CodeCommit の HTTPS Git 認証情報**」を生成。
-
-- Git 用ユーザー名
-- Git 用パスワード
-
-が発行される。
-
----
-
-## **③ Cloud9 または WorkSpaces からリポジトリを clone**
-
-### Cloud9 の場合（ブラウザIDE）
-Cloud9 のターミナルで：
-
-```bash
-git clone https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/<repo-name>
+```text
+project/
+  src/
+    index.ts
+    env.ts
+  dist/
+  .env.local
+  .env.example
+  package.json
+  tsconfig.json
+  docker-compose.yml
+  Dockerfile
 ```
 
-Cloud9 は Git と AWS CLI がプリインストールされているため、  
-ほぼそのまま使える（AWS公式ドキュメントより）  
-  [AWS Documentation](https://docs.aws.amazon.com/ja_jp/codecommit/latest/userguide/setting-up-ide-c9.html)
+### `.env.example`（サンプル・共有用）
 
----
+```env
+# アプリ基本
+NODE_ENV=development
+PORT=3000
 
-### WorkSpaces の場合（クラウドPC）
-WorkSpaces 内の VSCode / ターミナルで：
+# Discord Bot
+DISCORD_TOKEN=your-discord-token-here
 
-```bash
-git clone https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/<repo-name>
+# DB
+DATABASE_URL=postgres://user:password@localhost:5432/app
+
+# ログ
+LOG_LEVEL=debug
 ```
 
-Git が入っていなければインストールしておく。
+- **目的:** 「何が必要な環境変数か」をチームで共有する
+- **ポイント:** 値はダミーにする（本物は書かない）
 
----
+### `.env.local`（ローカル開発用・Git 管理しない）
 
-## **④ 変更を commit & push**
+```env
+NODE_ENV=development
+PORT=3000
 
-```bash
-git add .
-git commit -m "first commit"
-git push
+DISCORD_TOKEN=xxxxx
+DATABASE_URL=postgres://user:password@db:5432/app
+LOG_LEVEL=debug
+```
+
+- **ローカル専用の実値**を書く
+- Docker Compose から `env_file` として読み込む想定
+
+### `src/env.ts`（型安全な環境変数ラッパ）
+
+```ts
+import { z } from "zod";
+import dotenv from "dotenv";
+
+dotenv.config(); // .env.local or .env をロード
+
+const EnvSchema = z.object({
+  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  PORT: z.string().default("3000"),
+  DISCORD_TOKEN: z.string(),
+  DATABASE_URL: z.string().url(),
+  LOG_LEVEL: z.string().default("info"),
+});
+
+export const env = EnvSchema.parse(process.env);
+```
+
+### `src/index.ts`
+
+```ts
+import { env } from "./env";
+
+console.log("NODE_ENV:", env.NODE_ENV);
+console.log("PORT:", env.PORT);
+// ここで Discord Bot や DB 接続などに env を使う
 ```
 
 ---
 
-## **⑤ pull して同期**
+# Python プロジェクト向け .env 設計テンプレ
 
-```bash
-git pull
+## 想定構成
+
+- ランタイム: Python 3.x
+- 利用ライブラリ例: `python-dotenv`, `pydantic` or `pydantic-settings`
+- 実行環境: Docker / Docker Compose / クラウド
+
+### ディレクトリ構成例
+
+```text
+project/
+  app/
+    __init__.py
+    main.py
+    settings.py
+  .env.local
+  .env.example
+  requirements.txt
+  docker-compose.yml
+  Dockerfile
 ```
 
-これで AWS 内だけで GitHub と同じ運用ができる。
+### `.env.example`
 
----
+```env
+ENV=development
+PORT=8000
 
-# **3. Cloud9 × CodeCommit：AWS ネイティブで完結する構成**
+DISCORD_TOKEN=your-discord-token-here
+DATABASE_URL=postgres://user:password@localhost:5432/app
 
-Cloud9 はブラウザだけで使える IDE で、  
-CodeCommit との統合が公式にサポートされている。  
-  [AWS Documentation](https://docs.aws.amazon.com/ja_jp/codecommit/latest/userguide/setting-up-ide-c9.html)
-
-## Cloud9 のメリット
-- ローカルに何もインストール不要
-- Git / AWS CLI が最初から入っている
-- CodeCommit との連携が簡単
-- コストが安い（t3.small で月 3,000 円台）
-
-## Cloud9 のデメリット
-- VSCode/Cursor は使えない
-- ブラウザIDEのため、操作性は VSCode に劣る
-
----
-
-## Cloud9 × CodeCommit の構築手順
-
-### ① Cloud9 環境を作成
-- EC2（t3.small）
-- Amazon Linux 2 or Ubuntu
-- 自動休止 30 分
-
-### ② Git 認証情報を IAM で生成
-
-### ③ Cloud9 のターミナルで clone
-
-```bash
-git clone https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/<repo>
+LOG_LEVEL=debug
 ```
 
-### ④ commit / push / pull を実行
+### `.env.local`
 
----
+```env
+ENV=development
+PORT=8000
 
-# **4. WorkSpaces × CodeCommit：VSCode/Cursor を使いたい場合の構成**
+DISCORD_TOKEN=xxxxx
+DATABASE_URL=postgres://user:password@db:5432/app
 
-WorkSpaces はクラウド上の Windows / Linux デスクトップ。  
-ここに VSCode や Cursor をインストールして使う。
-
-## WorkSpaces のメリット
-- VSCode / Cursor が普通に使える
-- ローカルPCの制約を完全に回避
-- 開発体験が最も自然
-
-## WorkSpaces のデメリット
-- 月額固定でやや高い（5,000円〜）
-- ネットワーク品質に依存
-
----
-
-## WorkSpaces × CodeCommit の構築手順
-
-### ① WorkSpaces を作成（Windows 推奨）
-- Standard バンドル以上
-
-### ② WorkSpaces 内に Git / VSCode / Cursor をインストール
-
-### ③ IAM で Git 認証情報を生成
-
-### ④ WorkSpaces 内のターミナルで clone
-
-```bash
-git clone https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/<repo>
+LOG_LEVEL=debug
 ```
 
-### ⑤ VSCode / Cursor で開発し、commit/push
+### `settings.py`（Pydantic で型安全）
+
+```python
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    env: str = "development"
+    port: int = 8000
+    discord_token: str
+    database_url: str
+    log_level: str = "info"
+
+    class Config:
+        env_file = ".env.local"  # ローカル開発用
+        env_file_encoding = "utf-8"
+
+settings = Settings()
+```
+
+### `main.py`
+
+```python
+from .settings import Settings, settings
+
+def main():
+    print("ENV:", settings.env)
+    print("PORT:", settings.port)
+    # ここで Discord Bot や DB 接続などに settings を使う
+
+if __name__ == "__main__":
+    main()
+```
+
+- **本番環境:** `.env.local` を使わず、環境変数で上書き（Pydantic は環境変数優先）
 
 ---
 
-# **5. Cloud9 vs WorkSpaces × CodeCommit：最終比較**
+# Docker Compose と組み合わせた実践例
 
-| 項目                 | Cloud9 × CodeCommit     | WorkSpaces × CodeCommit  |
-| -------------------- | ----------------------- | ------------------------ |
-| ローカル制約への強さ | ◎（ブラウザのみ）       | ◎（クライアントのみ）    |
-| VSCode/Cursor        | ✕                       | ◎                        |
-| Git 操作             | Cloud9 ターミナルで可能 | VSCode ターミナルで可能  |
-| 開発体験             | △                       | ◎                        |
-| コスト               | 安い（3,000円台〜）     | やや高い（5,000円〜）    |
-| 向き                 | AWS ネイティブ開発      | VSCode/Cursor を使いたい |
+## 想定
+
+- `app-ts`: TypeScript（Node.js）サービス
+- `app-py`: Python サービス
+- `db`: PostgreSQL
+- `.env.local` を Compose の変数展開＋各サービスの `env_file` に利用
+
+### プロジェクト構成例
+
+```text
+project/
+  ts-app/
+    src/...
+    Dockerfile
+  py-app/
+    app/...
+    Dockerfile
+  .env.local
+  .env.example
+  docker-compose.yml
+```
+
+### `.env.local`（Compose 用＋アプリ用を兼ねる）
+
+```env
+# 共通
+COMPOSE_PROJECT_NAME=sample_app
+
+# TS アプリ
+TS_PORT=3000
+
+# Python アプリ
+PY_PORT=8000
+
+# DB
+POSTGRES_USER=app
+POSTGRES_PASSWORD=password
+POSTGRES_DB=app
+POSTGRES_PORT=5432
+
+# アプリ用
+DISCORD_TOKEN=xxxxx
+DATABASE_URL=postgres://app:password@db:5432/app
+LOG_LEVEL=debug
+```
+
+### `docker-compose.yml`（compose.yaml）
+
+```yaml
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app-ts:
+    build:
+      context: ./ts-app
+    container_name: ${COMPOSE_PROJECT_NAME}-ts
+    env_file:
+      - .env.local
+    environment:
+      # 必要なら上書きも可能
+      NODE_ENV: development
+    ports:
+      - "${TS_PORT}:3000"
+    depends_on:
+      - db
+
+  app-py:
+    build:
+      context: ./py-app
+    container_name: ${COMPOSE_PROJECT_NAME}-py
+    env_file:
+      - .env.local
+    environment:
+      ENV: development
+    ports:
+      - "${PY_PORT}:8000"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
+```
+
+### ポイント整理
+
+- **Compose の変数展開**
+  - `${COMPOSE_PROJECT_NAME}`, `${POSTGRES_PORT}`, `${TS_PORT}` などは `.env.local` から展開
+- **各コンテナの環境変数**
+  - `env_file: .env.local` でアプリ側から `DISCORD_TOKEN`, `DATABASE_URL` などを参照
+- **本番運用時の切り替え**
+  - `.env.local` はローカル専用
+  - 本番は:
+    - Compose を使うなら `--env-file .env.production` などで切り替え
+    - もしくはクラウドのタスク定義 / サービス設定で環境変数を直接指定
+    - シークレットは Secrets Manager / Parameter Store 等に移行
 
 ---
 
-# **6. 既存ドキュメントに追加する「ソース管理（CodeCommit）」章**
+# まとめ（運用の指針）
 
-以下を Cloud9 / WorkSpaces ガイドに追加すると自然に統合できる。
+- **ローカル開発**
+  - `.env.local` に「全部」書いて OK（Git 管理しない）
+  - TypeScript / Python からは `dotenv` / `Pydantic` で読み込む
+  - Docker Compose は `.env.local` を
+    - 変数展開（ポート・プロジェクト名など）
+    - `env_file`（アプリ用環境変数）として再利用
 
----
-
-## **📦 ソース管理：CodeCommit を使った AWS 内完結 Git 運用**
-
-AWS 上で GitHub のようなソース管理を行う場合、  
-CodeCommit を利用することで、AWS 内だけで安全に Git 運用ができる。
-
-### 運用フロー（最小構成）
-1. CodeCommit でリポジトリ作成  
-2. IAM で HTTPS Git 認証情報を生成  
-3. Cloud9 または WorkSpaces から clone  
-4. commit / push / pull  
-5. 必要に応じてブランチ運用
-
-### Cloud9 との相性
-- Git / AWS CLI がプリインストール  
-- CodeCommit との統合が公式サポート  
-    [AWS Documentation](https://docs.aws.amazon.com/ja_jp/codecommit/latest/userguide/setting-up-ide-c9.html)
-
-### WorkSpaces との相性
-- VSCode / Cursor を使った本格的な Git 開発が可能  
-- GitHub とほぼ同じ操作感
-
----
-
-# **最後に**
-
-Cloud9 と WorkSpaces のどちらを採用するかは、  
-**「VSCode/Cursor を使いたいか」**が最大の判断軸。
-
-- **使いたい → WorkSpaces × CodeCommit**
-- **使わなくてもいい → Cloud9 × CodeCommit（安い）**
-
-どちらにするか、崇史さんの用途に合わせて最適化できます。
+- **本番**
+  - `.env` ファイルは極力使わず、**環境変数＋Secrets 管理サービス**に寄せる
+  - イメージには秘密情報を焼き込まない
+  - アプリ側は「`process.env` / `os.environ` を読む設計」にしておく

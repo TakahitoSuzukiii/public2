@@ -233,3 +233,145 @@ nc -vz example.com 443
 - **プロトコル動作確認の辞書として**  
 - **トラブルシューティングのチェックリストとして**  
 - **Discord Bot / OpenClaw / GitHub MCP / AWS MCP のネットワーク調査にも応用可能**
+
+===========
+
+### 前提の整理
+
+telnet は今どきデフォルトで入っていないことが多いので、  
+**「どの OS で」「クライアントだけか／サーバもか」**を意識して入れるのがポイントです。
+
+ここでは：
+
+- **Windows（10/11）**
+- **macOS**
+- **Linux（Ubuntu 系）**
+
+の順で、**インストール手順＋確認コマンド**をまとめます。
+
+---
+
+## 1. Windows 10 / 11 で telnet をインストール
+
+### 1-1. GUI（いちばん分かりやすい方法）
+
+1. **コントロール パネル** を開く  
+2. **「プログラム」** をクリック  
+3. **「Windows の機能の有効化または無効化」** をクリック  
+4. 一覧から **「Telnet クライアント」** にチェックを入れる  
+5. **OK** を押してインストール完了を待つ
+
+### 1-2. コマンドで入れる（PowerShell）
+
+管理者権限の PowerShell で：
+
+```powershell
+dism /online /Enable-Feature /FeatureName:TelnetClient
+```
+
+### 1-3. インストール確認
+
+コマンドプロンプト or PowerShell で：
+
+```powershell
+telnet
+```
+
+`Microsoft Telnet>` のようなプロンプトが出れば OK。
+
+---
+
+## 2. macOS で telnet をインストール
+
+最近の macOS には telnet が標準で入っていないので、  
+**Homebrew 経由で入れる**のが定番です。
+
+### 2-1. Homebrew がない場合（最初だけ）
+
+ターミナルで：
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+※ すでに brew が入っているならこのステップは不要。
+
+### 2-2. telnet のインストール
+
+```bash
+brew install telnet
+```
+
+### 2-3. インストール確認
+
+```bash
+telnet -h
+```
+
+ヘルプが表示されれば OK。
+
+---
+
+## 3. Linux（Ubuntu 系）で telnet をインストール
+
+### 3-1. クライアントだけ入れる（疎通確認用途）
+
+疎通確認・ポート確認だけなら **クライアントだけで十分**です。
+
+```bash
+sudo apt update
+sudo apt install telnet -y
+```
+
+### 3-2. サーバも入れる（telnet でログインさせたい場合）
+
+※ セキュリティ的には非推奨。学習・検証用途に限定推奨。
+
+```bash
+sudo apt update
+sudo apt install telnetd -y
+```
+
+ディストリによっては `inetd` / `inetutils-telnetd` などが一緒に入ります。
+
+### 3-3. インストール確認
+
+```bash
+telnet
+```
+
+`telnet>` やヘルプが出れば OK。
+
+---
+
+## 4. 動作確認のミニチェック
+
+インストール後、まずはローカル or 適当なサイトで試すと安心です。
+
+### 4-1. どの OS でも共通
+
+```bash
+telnet example.com 80
+```
+
+`Connected to example.com.` と出て真っ黒画面になれば成功。
+
+### 4-2. Ubuntu でローカル確認（サーバも入れた場合）
+
+```bash
+telnet localhost 23
+```
+
+`Connected to localhost.` と出れば telnet サーバも動作中。
+
+---
+
+## 5. ざっくりまとめ（用途別）
+
+- **疎通確認・ポート確認だけしたい**
+  - Windows：Telnet クライアントを有効化
+  - macOS：`brew install telnet`
+  - Ubuntu：`sudo apt install telnet`
+- **telnet でログインさせたい（学習用）**
+  - Ubuntu：`sudo apt install telnetd`（＋設定）
+  - 本番用途では SSH を使うのが前提
